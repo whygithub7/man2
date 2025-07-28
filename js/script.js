@@ -456,8 +456,7 @@ function initializeForm() {
         input.addEventListener('input', clearFieldError);
     });
     
-    // Submit form
-    // form.addEventListener('submit', handleFormSubmit);
+
 }
 
 function validateField(e) {
