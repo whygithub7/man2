@@ -80,6 +80,10 @@ body {
     animation: popupSlideIn 0.5s ease-out;
 }
 
+.popup-content ol {
+  padding-left: 2em;
+}
+
 @keyframes popupSlideIn {
     from {
         opacity: 0;
@@ -224,6 +228,7 @@ body {
     text-align: center;
     color: var(--white);
     overflow: hidden;
+    background: url('../assets/images/bg.webp') center center/cover no-repeat;
 }
 
 .hero-background {
@@ -262,6 +267,7 @@ body {
 
 .hero-title {
     font-family: var(--font-heading);
+    text-shadow: 1px 1px 9px #ff0000;
     font-size: 3.5rem;
     margin-bottom: 20px;
     line-height: 1.2;
@@ -2131,6 +2137,50 @@ body {
     .offer-content .warning {
         padding: 10px;
     }
+}
+
+/* Компактный футер для мобильных экранов */
+@media (max-width: 480px) {
+  .footer {
+    padding: 10px 0 5px;
+  }
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .footer-section {
+    padding: 0 2px;
+  }
+  .footer-section h4 {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+  .footer-section ul li {
+    margin-bottom: 3px;
+  }
+  .footer-section ul li a {
+    font-size: 0.85rem;
+    padding: 2px 0;
+  }
+  .footer-section p {
+    display: none;
+  }
+  .social-links {
+    gap: 5px;
+    margin-top: 2px;
+  }
+  .social-link {
+    font-size: 1rem;
+  }
+  .footer-bottom {
+    padding-top: 4px;
+    font-size: 0.7rem;
+  }
+  .footer-section:not(:has(ul)) {
+    display: none !important;
+  }
 }
 
 
