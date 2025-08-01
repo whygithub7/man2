@@ -380,21 +380,18 @@ function initializeQuiz() {
 
 function nextQuestion() {
     if (currentQuestion < 10) {
-
-        
+        // Сохраняем текущую позицию скролла
+        const scrollY = window.scrollY;
         // Насконди текущий вопрос
         const currentQuestionEl = document.querySelector(`.question[data-question="${currentQuestion}"]`);
         currentQuestionEl.classList.remove('active');
-        
         // Переходим к следующему вопросу
         currentQuestion++;
-        
-
-        
         setTimeout(() => {
             const nextQuestionEl = document.querySelector(`.question[data-question="${currentQuestion}"]`);
             nextQuestionEl.classList.add('active');
-            
+            // Восстанавливаем скролл
+            window.scrollTo({ top: scrollY, behavior: 'auto' });
             // Обновляем прогресс-бар
             updateQuizProgress();
         }, 300);
