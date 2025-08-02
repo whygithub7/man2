@@ -392,8 +392,7 @@ body {
 .carousel-track {
     display: flex;
     transition: transform 0.5s ease-in-out;
-    /* Улучшенная поддержка тач-устройств */
-    touch-action: pan-x;
+    /* touch-action: pan-x; удалено для восстановления вертикального скролла */
     -webkit-tap-highlight-color: transparent;
     cursor: grab;
 }

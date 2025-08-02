@@ -1,12 +1,12 @@
-// Variabili globali
+// Глобальные переменные
 let currentSlide = 0;
 let currentQuestion = 1;
 let quizAnswers = {};
 let countdownInterval;
-let selectedProductIndex = 0; // Indice del prodotto selezionato
+let selectedProductIndex = 0; // Индекс выбранного продукта
 let isTouch = false; // Определяем переменную для отслеживания touch-устройств
 
-// Prodotti
+// Продукты
 const products = [
     {
         id: 1,
@@ -50,16 +50,16 @@ const products = [
     }
 ];
 
-// Inizializzazione quando il DOM è caricato
+// Инициализация при загрузке DOM
 document.addEventListener('DOMContentLoaded', function() {
     initializePopup();
     initializeCarousel();
     initializeQuiz();
     initializeForm();
-    initializeProductDetails(); // Add this line
+    initializeProductDetails(); // Добавить эту строку
     startCountdown();
     
-    // Smooth scrolling per i link interni
+    // Плавный скролл для внутренних ссылок
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -93,27 +93,27 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Popup Iniziale
+// Начальный попап
 function initializePopup() {
     const popup = document.getElementById('welcomePopup');
     const closeBtn = document.getElementById('closePopup');
     const acceptBtn = document.getElementById('acceptOffer');
     
-    // Chiudi popup
+    // Закрыть попап
     closeBtn.addEventListener('click', closePopup);
     acceptBtn.addEventListener('click', function() {
         closePopup();
         scrollToProducts();
     });
     
-    // Chiudi popup cliccando fuori
+    // Закрыть попап по клику вне окна
     popup.addEventListener('click', function(e) {
         if (e.target === popup) {
             closePopup();
         }
     });
     
-    // Chiudi popup con ESC
+    // Закрыть попап по ESC
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && popup.style.display !== 'none') {
             closePopup();
@@ -129,7 +129,7 @@ function closePopup() {
     }, 300);
 }
 
-// Countdown Timer
+// Таймер обратного отсчета
 function startCountdown() {
     let hours = 23;
     let minutes = 59;
@@ -154,7 +154,7 @@ function startCountdown() {
             }
         }
         
-        // Verifichiamo l'esistenza degli elementi prima dell'aggiornamento
+        // Проверяем наличие элементов перед обновлением
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
@@ -165,7 +165,7 @@ function startCountdown() {
     }, 1000);
 }
 
-// Carousel
+// Карусель
 function initializeCarousel() {
     const track = document.getElementById('carouselTrack');
     const prevBtn = document.getElementById('prevBtn');
@@ -179,20 +179,20 @@ function initializeCarousel() {
         indicator.addEventListener('click', () => goToSlide(index));
     });
 
-    // Aggiunta del gestore di clic sui pulsanti di selezione prodotto
+    // Добавление обработчика клика на кнопки выбора продукта
     const selectButtons = document.querySelectorAll(".select-product-btn");
     selectButtons.forEach((button) => {
         button.addEventListener("click", (e) => {
             e.stopPropagation();
             const productIndex = parseInt(button.dataset.product);
-            selectedProductIndex = productIndex; // Salviamo il prodotto selezionato
+            selectedProductIndex = productIndex; // Сохраняем выбранный продукт
             updateSelectedProduct(productIndex);
             document.getElementById("quiz").style.display = "block";
             scrollToQuiz();
         });
     });
     
-    // Touch/Swipe support - улучшенная версия
+    // Поддержка touch/swipe — улучшенная версия
     let startX = 0;
     let startY = 0;
     let currentX = 0;
@@ -214,22 +214,21 @@ function initializeCarousel() {
         wasSwipe = false;
         startTime = Date.now();
         if (swipeTimeout) clearTimeout(swipeTimeout);
-        
-    }, { passive: true });
+    }, { passive: false });
     
     track.addEventListener('touchmove', function(e) {
         if (!isDragging) return;
         currentX = e.touches[0].clientX;
         currentY = e.touches[0].clientY;
-        
-        // Предотвращаем скролл по вертикали при горизонтальном свайпе
+
         const diffX = Math.abs(startX - currentX);
         const diffY = Math.abs(startY - currentY);
-        
-        
-        if (diffX > diffY && diffX > 10) {
-            e.preventDefault();
+
+        // Только если горизонтальный свайп явно больше вертикального и превышает порог
+        if (diffX > 20 && diffX > diffY) {
+            e.preventDefault(); // Блокируем только горизонтальный свайп
         }
+        // иначе не блокируем — вертикальный скролл работает
     }, { passive: false });
     
     track.addEventListener('touchend', function(e) {
@@ -350,7 +349,7 @@ function updateCarousel() {
     });
 }
 
-// Quiz
+// Квиз
 function initializeQuiz() {
     const quizOptions = document.querySelectorAll('.quiz-option');
     
@@ -359,18 +358,18 @@ function initializeQuiz() {
             const question = this.closest('.question');
             const questionNum = question.dataset.question;
             
-            // Rimuovi selezione precedente
+            // Удаляем предыдущий выбор
             question.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
             
-            // Aggiungi selezione corrente
+            // Добавляем текущий выбор
             this.classList.add('selected');
             
-            // Salva risposta
+            // Сохраняем ответ
             quizAnswers[questionNum] = this.dataset.value;
             
-            // Vai alla prossima domanda dopo un breve delay
+            // Переходим к следующему вопросу после небольшой задержки
             setTimeout(() => {
                 nextQuestion();
             }, 500);
@@ -396,7 +395,7 @@ function nextQuestion() {
             updateQuizProgress();
         }, 300);
     } else {
-        // Квиз завершен, показываем результат
+        // Квиз завершён, показываем результат
         showQuizResult();
     }
 }
@@ -413,22 +412,22 @@ function showQuizResult() {
     const currentQuestionEl = document.querySelector(`.question[data-question="10"]`);
     const resultEl = document.getElementById('quizResult');
     
-    // Nascondiamo l'ultima domanda
+    // Скрываем последний вопрос
     currentQuestionEl.classList.remove('active');
     
-    // Mostriamo il risultato
+    // Показываем результат
     setTimeout(() => {
         resultEl.classList.add("active");
         updateQuizProgress();
         
-        // Nascondiamo i blocchi non necessari
+        // Скрываем ненужные блоки
         document.querySelector('.hero').style.display = 'none';
         document.querySelector('#products').style.display = 'none';
         document.querySelector('footer').style.display = 'none';
         document.querySelector('#quiz').style.display = 'none'; // Скрываем весь quiz-container
         
         document.getElementById("order").style.display = "block";
-        // Aggiorniamo il prodotto selezionato nel modulo ordine basato sulla scelta dell'utente
+        // Обновляем выбранный продукт в форме заказа на основе выбора пользователя
         updateSelectedProduct(selectedProductIndex);
         scrollToOrder();
     }, 300);
@@ -437,34 +436,34 @@ function showQuizResult() {
 }
 
 function calculateRecommendation() {
-    // Logica semplificata per raccomandazione basata sulle risposte
+    // Упрощённая логика рекомендации на основе ответов
     const age = quizAnswers['1'];
     const looking = quizAnswers['2'];
     const preference = quizAnswers['3'];
     const budget = quizAnswers['4'];
     const purpose = quizAnswers['5'];
     
-    // Algoritmo di raccomandazione
+    // Алгоритм рекомендации
     if (looking === 'wellness' || preference === 'natural') {
-        return products[0]; // Set Benessere Maschile
+        return products[0]; // Набор для мужского здоровья
     } else if (looking === 'exploration' && budget !== 'budget') {
-        return products[1]; // Calendario dell'Intimità
+        return products[1]; // Календарь Интимности
     } else if (looking === 'romance' || purpose === 'surprise') {
-        return products[2]; // Set Romantico Premium
+        return products[2]; // Романтический премиум-набор
     } else if (looking === 'adventure' && budget !== 'luxury') {
-        return products[3]; // Altalena Premium
+        return products[3]; // Премиум-качели
     } else {
-        return products[4]; // Integratori per Coppie
+        return products[4]; // Добавки для пар
     }
 }
 
-// Form
+// Форма
 function initializeForm() {
     const form = document.getElementById('orderForm');
     const inputs = form.querySelectorAll('input, select');
     let analyticsAlreadySent = false;
     
-    // Validazione in tempo reale
+    // Валидация в реальном времени
     inputs.forEach(input => {
         input.addEventListener('blur', validateField);
         input.addEventListener('input', clearFieldError);
@@ -485,10 +484,10 @@ function validateField(e) {
     let isValid = true;
     let errorMessage = '';
     
-    // Rimuovi errori precedenti
+    // Удаляем предыдущие ошибки
     clearFieldError(e);
     
-    // Validazione per tipo di campo
+    // Валидация по типу поля
     switch (field.type) {
         case 'email':
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -512,7 +511,7 @@ function validateField(e) {
             break;
     }
     
-    // Validazione CAP italiano
+    // Валидация итальянского CAP
     if (field.id === 'zipCode') {
         const zipRegex = /^[0-9]{5}$/;
         if (!zipRegex.test(value)) {
@@ -594,7 +593,7 @@ function handleFormSubmit(e) {
         
 
         
-        // Reset del modulo dopo il successo
+        // Сброс формы после успешной отправки
         setTimeout(() => {
             form.reset();
             scrollToTop();
@@ -602,7 +601,7 @@ function handleFormSubmit(e) {
     }, 2000);
 }
 
-// Utility Functions
+// Вспомогательные функции
 function scrollToProducts() {
     document.getElementById('products').scrollIntoView({
         behavior: 'smooth'
@@ -639,15 +638,15 @@ function updateSelectedProduct(index) {
         </div>
     `;
     
-    // Aggiorna totali
+    // Обновляем суммы
     document.getElementById('subtotal').textContent = product.price;
     document.getElementById('total').textContent = product.price;
     
-    // Aggiorniamo i campi nascosti del modulo
+    // Обновляем скрытые поля формы
     document.getElementById('productName').value = product.name;
     document.getElementById('productImage').value = location.origin + '/lander/man2/' +product.image;
     
-    // Compiliamo i parametri UTM dall'URL
+    // Заполняем UTM-параметры из URL
     const urlParams = new URLSearchParams(window.location.search);
     const utmFields = ['utm_source', 'utm_content', 'utm_term', 'utm_campaign', 'utm_medium', 'uuid', 'fbclid', 'gclid', 'cpc', 'cur'];
     
@@ -669,7 +668,7 @@ function openLightbox(imageSrc) {
     lightboxImage.src = imageSrc;
     lightbox.classList.add('active');
     
-    // Previeni scroll del body
+    // Запретить скролл body
     document.body.style.overflow = 'hidden';
 }
 
@@ -677,11 +676,11 @@ function closeLightbox() {
     const lightbox = document.getElementById('lightbox');
     lightbox.classList.remove('active');
     
-    // Ripristina scroll del body
+    // Восстановить скролл body
     document.body.style.overflow = '';
 }
 
-// Loading State
+// Состояние загрузки
 function showLoadingState() {
     const submitBtn = document.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
@@ -690,7 +689,7 @@ function showLoadingState() {
         Elaborazione in corso...
     `;
     
-    // Aggiungi spinner CSS se non esiste
+    // Добавить spinner CSS, если не существует
     if (!document.querySelector('#spinner-styles')) {
         const spinnerStyles = document.createElement('style');
         spinnerStyles.id = 'spinner-styles';
@@ -721,88 +720,20 @@ function hideLoadingState() {
 
 
 
-// Gestione errori globali
-// window.addEventListener('error', function(e) {
-//     showNotification('Si è verificato un errore. Ricarica la pagina e riprova.', 'error');
-// });
 
-// Performance monitoring
 
-// Gestione visibilità pagina
+// Обработка видимости страницы
 document.addEventListener('visibilitychange', function() {
     if (document.hidden) {
-        // Pausa animazioni quando la pagina non è visibile
+        // Пауза анимаций, когда страница не видна
         if (countdownInterval) {
             clearInterval(countdownInterval);
         }
     } else {
-        // Riprendi animazioni quando la pagina torna visibile
+        // Возобновить анимации, когда страница снова видна
         startCountdown();
     }
 });
-
-// Aggiungi stili per le animazioni delle notifiche
-// const notificationStyles = document.createElement('style');
-// notificationStyles.textContent = `
-//     @keyframes slideInRight {
-//         from {
-//             transform: translateX(100%);
-//             opacity: 0;
-//         }
-//         to {
-//             transform: translateX(0);
-//             opacity: 1;
-//         }
-//     }
-    
-//     @keyframes slideOutRight {
-//         from {
-//             transform: translateX(0);
-//             opacity: 1;
-//         }
-//         to {
-//             transform: translateX(100%);
-//             opacity: 0;
-//         }
-//     }
-    
-//     @keyframes popupSlideOut {
-//         from {
-//             opacity: 1;
-//             transform: scale(1) translateY(0);
-//         }
-//         to {
-//             opacity: 0;
-//             transform: scale(0.8) translateY(-50px);
-//         }
-//     }
-    
-//     .field-error {
-//         animation: fadeInUp 0.3s ease-out;
-//     }
-    
-//     @keyframes fadeInUp {
-//         from {
-//             opacity: 0;
-//             transform: translateY(10px);
-//         }
-//         to {
-//             opacity: 1;
-//             transform: translateY(0);
-//         }
-//     }
-    
-//     input.error, select.error {
-//         border-color: var(--deep-pink) !important;
-//         box-shadow: 0 0 0 3px rgba(199, 21, 133, 0.2) !important;
-//     }
-// `;
-
-// document.head.appendChild(notificationStyles);
-
-
-
-
 
 
 
